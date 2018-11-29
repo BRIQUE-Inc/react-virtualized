@@ -1,2 +1,3 @@
 # react-virtualized
-Virtualized grid component of react.js
+
+> Virtualized grid component of react.js

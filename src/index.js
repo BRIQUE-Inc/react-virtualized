@@ -1,5 +1,5 @@
-import React from 'react';
+import VirtualizedTable from './components/2-molecules/virtualized-table/virtualized-table';
 
-const App = () => <div>Hello World</div>;
+export { VirtualizedTable };
 
-export default App;
+export default VirtualizedTable;

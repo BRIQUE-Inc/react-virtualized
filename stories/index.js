@@ -1,5 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import App from '../src';
+import VirtualizedTableDefault from './basic/virtualized-table-default';
 
-storiesOf('Basic', module).add('default', () => <App />);
+storiesOf('Basic', module).add('virtualized table default', () => (
+  <VirtualizedTableDefault />
+));

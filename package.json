@@ -1,0 +1,80 @@
+{
+  "name": "@brique/react-virtualized",
+  "version": "0.1.0",
+  "description": "Virtualized grid component of react.js",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "start-storybook -p 9001 -c .storybook",
+    "build": "rm -rf dist && NODE_ENV=production babel src --out-dir dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BRIQUE-Inc/react-virtualized.git"
+  },
+  "keywords": [
+    "react.js",
+    "virtualized"
+  ],
+  "author": "brique",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BRIQUE-Inc/react-virtualized/issues"
+  },
+  "homepage": "https://github.com/BRIQUE-Inc/react-virtualized#readme",
+  "dependencies": {
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "@storybook/react": "^4.0.9",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.4",
+    "eslint": "^5.9.0",
+    "eslint-config-react-app": "^3.0.5",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "comma-dangle": [
+        "error",
+        {
+          "arrays": "always-multiline",
+          "objects": "always-multiline",
+          "imports": "always-multiline",
+          "exports": "always-multiline",
+          "functions": "always-multiline"
+        }
+      ]
+    }
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ]
+  }
+}

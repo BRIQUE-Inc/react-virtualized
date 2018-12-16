@@ -20,6 +20,7 @@ class VirtualizedTableDefault extends Component {
       cols: _makeCols(0),
       rows: _makeRows(0, 0),
     };
+    this._table = React.createRef();
     this._renderItem = this._renderItem.bind(this);
     this._renderFixedRowItem = this._renderFixedRowItem.bind(this);
     this._renderFixedColItem = this._renderFixedColItem.bind(this);
@@ -30,6 +31,7 @@ class VirtualizedTableDefault extends Component {
 
   render() {
     const {
+      _table,
       _renderItem,
       _renderFixedRowItem,
       _renderFixedColItem,
@@ -40,6 +42,7 @@ class VirtualizedTableDefault extends Component {
       <VirtualizedTable
         height={600}
         width={400}
+        style={{ boxSizing: 'border-box', border: '1px solid red' }}
         rowCount={10000}
         colCount={400}
         renderRowCount={16}
@@ -60,8 +63,13 @@ class VirtualizedTableDefault extends Component {
         renderFixedColItem={_renderFixedColItem}
         onChangeRowIdx={_onChangeRowIdx}
         onChangeColIdx={_onChangeColIdx}
+        innerRef={_table}
       />
     );
+  }
+
+  componentDidMount() {
+    console.log(this._table.current);
   }
 
   _renderItem(rowIdx, colIdx, style) {

@@ -1,51 +1,56 @@
 import React, { Component } from 'react';
-import { VirtualizedTable } from '../../src';
+import { VirtualizedTableHandy } from '../../src';
 
-const _makeCols = idx => [...Array(3)].map((_, j) => ({ colId: idx + j }));
-const _makeRows = (rowIdx, colIdx) =>
-  [...Array(16)].map((_, i) =>
-    [...Array(3)]
-      .map((_, j) => colIdx + j)
-      .reduce((row, colId) => ({ ...row, [colId]: `${rowIdx + i},${colId}` }), {
-        _id: rowIdx + i,
-      }),
-  );
+const COL_COUNT = 500;
+const ROW_COUNT = 1000;
 
-class VirtualizedTableDefault extends Component {
+class VirtualizedTableHandyDefault extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      colIdx: 0,
-      rowIdx: 0,
-      cols: _makeCols(0),
-      rows: _makeRows(0, 0),
+      cols: [...Array(COL_COUNT)].map((_, j) => ({
+        key: `${j}`,
+        value: `COL_${j}`,
+      })),
+      rows: [...Array(ROW_COUNT)].map((_, i) =>
+        [...Array(COL_COUNT)]
+          .map((_, j) => ({
+            key: `${j}`,
+            value: `ITEM(${i}, ${j})`,
+          }))
+          .reduce(
+            (acc, cur) => {
+              acc[cur.key] = cur.value;
+              return acc;
+            },
+            { rowKey: `${i}` },
+          ),
+      ),
     };
-    this._table = React.createRef();
+
     this._renderItem = this._renderItem.bind(this);
     this._renderFixedRowItem = this._renderFixedRowItem.bind(this);
     this._renderFixedColItem = this._renderFixedColItem.bind(this);
-    this._onChangeRowIdx = this._onChangeRowIdx.bind(this);
-    this._onChangeColIdx = this._onChangeColIdx.bind(this);
-    this._update = this._update.bind(this);
   }
 
   render() {
     const {
-      _table,
+      state: { rows, cols },
+
       _renderItem,
       _renderFixedRowItem,
       _renderFixedColItem,
-      _onChangeRowIdx,
-      _onChangeColIdx,
     } = this;
+
     return (
       <div style={{ display: 'flex', width: '100%', height: '100%' }}>
-        <VirtualizedTable
+        <VirtualizedTableHandy
           height={600}
           width={400}
           style={{ boxSizing: 'border-box', border: '1px solid red' }}
-          rowCount={10000}
-          colCount={400}
+          rows={rows}
+          cols={cols}
           renderRowCount={16}
           renderColCount={3}
           itemHeight={40}
@@ -62,61 +67,44 @@ class VirtualizedTableDefault extends Component {
           renderItem={_renderItem}
           renderFixedRowItem={_renderFixedRowItem}
           renderFixedColItem={_renderFixedColItem}
-          onChangeRowIdx={_onChangeRowIdx}
-          onChangeColIdx={_onChangeColIdx}
-          innerRef={_table}
         />
         <textarea
           disabled
           style={{ width: 0, flexGrow: 1 }}
           value={`
 import React, { Component } from 'react';
-import { VirtualizedTable } from '@brique/react-virtualized';
+import { VirtualizedTableHandy } from '@brique/react-virtualized';
 
-const _makeCols = idx => [...Array(3)].map((_, j) => ({ colId: idx + j }));
-const _makeRows = (rowIdx, colIdx) =>
-  [...Array(16)].map((_, i) =>
-    [...Array(3)]
-      .map((_, j) => colIdx + j)
-      .reduce((row, colId) => ({ ...row, [colId]: \`\${rowIdx + i},\${colId}\` }), {
-        _id: rowIdx + i,
-      }),
-  );
-
-class VirtualizedTableDefault extends Component {
+class VirtualizedTableHandyDefault extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      colIdx: 0,
-      rowIdx: 0,
-      cols: _makeCols(0),
-      rows: _makeRows(0, 0),
+      cols: [{column_objects}],
+      rows: [{row_objects}],
     };
-    this._table = React.createRef();
+
     this._renderItem = this._renderItem.bind(this);
     this._renderFixedRowItem = this._renderFixedRowItem.bind(this);
     this._renderFixedColItem = this._renderFixedColItem.bind(this);
-    this._onChangeRowIdx = this._onChangeRowIdx.bind(this);
-    this._onChangeColIdx = this._onChangeColIdx.bind(this);
-    this._update = this._update.bind(this);
   }
 
   render() {
     const {
-      _table,
+      state: { rows, cols },
+
       _renderItem,
       _renderFixedRowItem,
       _renderFixedColItem,
-      _onChangeRowIdx,
-      _onChangeColIdx,
     } = this;
+
     return (
-      <VirtualizedTable
+      <VirtualizedTableHandy
         height={600}
         width={400}
         style={{ boxSizing: 'border-box', border: '1px solid red' }}
-        rowCount={10000}
-        colCount={400}
+        rows={rows}
+        cols={cols}
         renderRowCount={16}
         renderColCount={3}
         itemHeight={40}
@@ -133,24 +121,11 @@ class VirtualizedTableDefault extends Component {
         renderItem={_renderItem}
         renderFixedRowItem={_renderFixedRowItem}
         renderFixedColItem={_renderFixedColItem}
-        onChangeRowIdx={_onChangeRowIdx}
-        onChangeColIdx={_onChangeColIdx}
-        innerRef={_table}
       />
     );
   }
 
-  componentDidMount() {
-    console.log(this._table.current);
-  }
-
-  _renderItem(rowIdx, colIdx, style) {
-    const { colIdx: startColIdx, rowIdx: startRowIdx, cols, rows } = this.state;
-    const colKey = colIdx - startColIdx;
-    const col = cols[colKey];
-    const rowKey = rowIdx - startRowIdx;
-    const row = rows[rowKey];
-    const content = row && col && row[col.colId];
+  _renderItem(row, col, rowIdx, colIdx, style) {
     return (
       <div
         key={\`\${rowIdx},\${colIdx}\`}
@@ -161,15 +136,12 @@ class VirtualizedTableDefault extends Component {
           boxSizing: 'border-box',
         }}
       >
-        {content}
+        {row && col && row[col.key]}
       </div>
     );
   }
 
-  _renderFixedRowItem(colIdx, style) {
-    const { colIdx: startColIdx, cols } = this.state;
-    const key = colIdx - startColIdx;
-    const col = cols[key];
+  _renderFixedRowItem(col, colIdx, style) {
     return (
       <div
         key={\`-1,\${colIdx}\`}
@@ -180,12 +152,12 @@ class VirtualizedTableDefault extends Component {
           boxSizing: 'border-box',
         }}
       >
-        {col && \`COL_\${col.colId}\`}
+        {col && col.value}
       </div>
     );
   }
 
-  _renderFixedColItem(rowIdx, style) {
+  _renderFixedColItem(row, rowIdx, style) {
     return (
       <div
         key={\`\${rowIdx},-1\`}
@@ -200,39 +172,16 @@ class VirtualizedTableDefault extends Component {
       </div>
     );
   }
-
-  _onChangeRowIdx(rowIdx) {
-    this.setState({ rowIdx }, this._update);
-  }
-
-  _onChangeColIdx(colIdx) {
-    this.setState({ colIdx }, this._update);
-  }
-
-  _update() {
-    const { rowIdx, colIdx } = this.state;
-    this.setState({ rows: _makeRows(rowIdx, colIdx), cols: _makeCols(colIdx) });
-  }
 }
 
-export default VirtualizedTableDefault;
+export default VirtualizedTableHandyDefault;
         `}
         />
       </div>
     );
   }
 
-  componentDidMount() {
-    console.log(this._table.current);
-  }
-
-  _renderItem(rowIdx, colIdx, style) {
-    const { colIdx: startColIdx, rowIdx: startRowIdx, cols, rows } = this.state;
-    const colKey = colIdx - startColIdx;
-    const col = cols[colKey];
-    const rowKey = rowIdx - startRowIdx;
-    const row = rows[rowKey];
-    const content = row && col && row[col.colId];
+  _renderItem(row, col, rowIdx, colIdx, style) {
     return (
       <div
         key={`${rowIdx},${colIdx}`}
@@ -243,15 +192,12 @@ export default VirtualizedTableDefault;
           boxSizing: 'border-box',
         }}
       >
-        {content}
+        {row && col && row[col.key]}
       </div>
     );
   }
 
-  _renderFixedRowItem(colIdx, style) {
-    const { colIdx: startColIdx, cols } = this.state;
-    const key = colIdx - startColIdx;
-    const col = cols[key];
+  _renderFixedRowItem(col, colIdx, style) {
     return (
       <div
         key={`-1,${colIdx}`}
@@ -262,12 +208,12 @@ export default VirtualizedTableDefault;
           boxSizing: 'border-box',
         }}
       >
-        {col && `COL_${col.colId}`}
+        {col && col.value}
       </div>
     );
   }
 
-  _renderFixedColItem(rowIdx, style) {
+  _renderFixedColItem(row, rowIdx, style) {
     return (
       <div
         key={`${rowIdx},-1`}
@@ -282,19 +228,6 @@ export default VirtualizedTableDefault;
       </div>
     );
   }
-
-  _onChangeRowIdx(rowIdx) {
-    this.setState({ rowIdx }, this._update);
-  }
-
-  _onChangeColIdx(colIdx) {
-    this.setState({ colIdx }, this._update);
-  }
-
-  _update() {
-    const { rowIdx, colIdx } = this.state;
-    this.setState({ rows: _makeRows(rowIdx, colIdx), cols: _makeCols(colIdx) });
-  }
 }
 
-export default VirtualizedTableDefault;
+export default VirtualizedTableHandyDefault;

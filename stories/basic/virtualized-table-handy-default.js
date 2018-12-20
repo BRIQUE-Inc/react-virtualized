@@ -59,11 +59,6 @@ class VirtualizedTableHandyDefault extends Component {
           isFixedCol={true}
           fixedRowHeight={80}
           fixedColWidth={40}
-          fixedCornerStyle={{
-            backgroundColor: '#ffffff',
-            border: '1px solid black',
-            boxSizing: 'border-box',
-          }}
           renderItem={_renderItem}
           renderFixedRowItem={_renderFixedRowItem}
           renderFixedColItem={_renderFixedColItem}
@@ -113,11 +108,6 @@ class VirtualizedTableHandyDefault extends Component {
         isFixedCol={true}
         fixedRowHeight={80}
         fixedColWidth={40}
-        fixedCornerStyle={{
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
         renderItem={_renderItem}
         renderFixedRowItem={_renderFixedRowItem}
         renderFixedColItem={_renderFixedColItem}

@@ -40,13 +40,13 @@ class VirtualizedTable extends Component {
         isFixedCol,
         fixedRowHeight,
         fixedColWidth,
-        fixedCornerStyle,
         renderRow,
         renderItem,
         renderFixedRow,
         renderFixedRowItem,
         renderFixedCol,
         renderFixedColItem,
+        renderFixedCorner,
         innerRef
       },
       state: {
@@ -118,7 +118,7 @@ class VirtualizedTable extends Component {
     let fixedCorner;
 
     if (isFixedRow && isFixedCol) {
-      const style = { ...fixedCornerStyle,
+      const style = {
         position: 'absolute',
         width: `${fixedColWidth}px`,
         height: `${fixedRowHeight}px`,
@@ -126,10 +126,7 @@ class VirtualizedTable extends Component {
         left: 0,
         zIndex: 8
       };
-      fixedCorner = React.createElement("div", {
-        ref: _fixedCorner,
-        style: style
-      });
+      fixedCorner = renderFixedCorner(style, _fixedCorner);
     } // make rows
 
 
@@ -310,11 +307,6 @@ VirtualizedTable.defaultProps = {
   isFixedCol: false,
   fixedRowHeight: 50,
   fixedColWidth: 50,
-  fixedCornerStyle: {
-    backgroundColor: '#ffffff',
-    border: '1px solid black',
-    boxSizing: 'border-box'
-  },
   renderRow: (rowIdx, style, children) => React.createElement("div", {
     key: `${rowIdx}`,
     style: style
@@ -351,6 +343,14 @@ VirtualizedTable.defaultProps = {
       boxSizing: 'border-box'
     }
   }, `COL${rowIdx}`),
+  renderFixedCorner: (style, ref) => React.createElement("div", {
+    ref: ref,
+    style: { ...style,
+      backgroundColor: '#ffffff',
+      border: '1px solid black',
+      boxSizing: 'border-box'
+    }
+  }),
   onChangeRowIdx: rowIdx => {},
   onChangeColIdx: colIdx => {},
   innerRef: el => {}
@@ -371,13 +371,13 @@ VirtualizedTable.propTypes = {
   isFixedCol: PropTypes.bool,
   fixedRowHeight: PropTypes.number,
   fixedColWidth: PropTypes.number,
-  fixedCornerStyle: PropTypes.object,
   renderRow: PropTypes.func,
   renderItem: PropTypes.func,
   renderFixedRow: PropTypes.func,
   renderFixedRowItem: PropTypes.func,
   renderFixedCol: PropTypes.func,
   renderFixedColItem: PropTypes.func,
+  renderFixedCorner: PropTypes.func,
   onChangeRowIdx: PropTypes.func,
   onChangeColIdx: PropTypes.func,
   innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object])

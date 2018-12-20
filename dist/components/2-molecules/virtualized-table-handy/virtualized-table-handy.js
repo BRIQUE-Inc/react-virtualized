@@ -42,13 +42,13 @@ class VirtualizedTableHandy extends Component {
         isFixedCol,
         fixedRowHeight,
         fixedColWidth,
-        fixedCornerStyle,
         renderRow,
         renderItem,
         renderFixedRow,
         renderFixedRowItem,
         renderFixedCol,
         renderFixedColItem,
+        renderFixedCorner,
         innerRef
       },
       state: {
@@ -124,7 +124,7 @@ class VirtualizedTableHandy extends Component {
     let fixedCorner_;
 
     if (isFixedRow && isFixedCol) {
-      const style = { ...fixedCornerStyle,
+      const style = {
         position: 'absolute',
         width: `${fixedColWidth}px`,
         height: `${fixedRowHeight}px`,
@@ -132,10 +132,7 @@ class VirtualizedTableHandy extends Component {
         left: 0,
         zIndex: 8
       };
-      fixedCorner_ = React.createElement("div", {
-        ref: _fixedCorner,
-        style: style
-      });
+      fixedCorner_ = renderFixedCorner(style, _fixedCorner);
     } // make rows
 
 
@@ -322,13 +319,13 @@ _defineProperty(VirtualizedTableHandy, "propTypes", {
   isFixedCol: PropTypes.bool,
   fixedRowHeight: PropTypes.number,
   fixedColWidth: PropTypes.number,
-  fixedCornerStyle: PropTypes.object,
   renderRow: PropTypes.func,
   renderItem: PropTypes.func,
   renderFixedRow: PropTypes.func,
   renderFixedRowItem: PropTypes.func,
   renderFixedCol: PropTypes.func,
   renderFixedColItem: PropTypes.func,
+  renderFixedCorner: PropTypes.func,
   onChangeRowIdx: PropTypes.func,
   onChangeColIdx: PropTypes.func,
   innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
@@ -350,11 +347,6 @@ _defineProperty(VirtualizedTableHandy, "defaultProps", {
   isFixedCol: false,
   fixedRowHeight: 50,
   fixedColWidth: 50,
-  fixedCornerStyle: {
-    backgroundColor: '#ffffff',
-    border: '1px solid black',
-    boxSizing: 'border-box'
-  },
   renderRow: (row, rowIdx, style, children) => React.createElement("div", {
     key: `${rowIdx}`,
     style: style
@@ -391,6 +383,14 @@ _defineProperty(VirtualizedTableHandy, "defaultProps", {
       boxSizing: 'border-box'
     }
   }, `COL${rowIdx}`),
+  renderFixedCorner: (style, ref) => React.createElement("div", {
+    ref: ref,
+    style: { ...style,
+      backgroundColor: '#ffffff',
+      border: '1px solid black',
+      boxSizing: 'border-box'
+    }
+  }),
   onChangeRowIdx: rowIdx => {},
   onChangeColIdx: colIdx => {},
   innerRef: el => {}

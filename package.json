@@ -17,7 +17,10 @@
     "react.js",
     "virtualized"
   ],
-  "author": "brique",
+  "author": {
+    "name": "brique",
+    "email": "info@brique.co.kr"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/BRIQUE-Inc/react-virtualized/issues"

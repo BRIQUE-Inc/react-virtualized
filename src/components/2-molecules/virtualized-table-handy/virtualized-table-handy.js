@@ -22,13 +22,13 @@ class VirtualizedTableHandy extends Component {
     isFixedCol: PropTypes.bool,
     fixedRowHeight: PropTypes.number,
     fixedColWidth: PropTypes.number,
-    fixedCornerStyle: PropTypes.object,
     renderRow: PropTypes.func,
     renderItem: PropTypes.func,
     renderFixedRow: PropTypes.func,
     renderFixedRowItem: PropTypes.func,
     renderFixedCol: PropTypes.func,
     renderFixedColItem: PropTypes.func,
+    renderFixedCorner: PropTypes.func,
     onChangeRowIdx: PropTypes.func,
     onChangeColIdx: PropTypes.func,
     innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
@@ -50,11 +50,6 @@ class VirtualizedTableHandy extends Component {
     isFixedCol: false,
     fixedRowHeight: 50,
     fixedColWidth: 50,
-    fixedCornerStyle: {
-      backgroundColor: '#ffffff',
-      border: '1px solid black',
-      boxSizing: 'border-box',
-    },
     renderRow: (row, rowIdx, style, children) => (
       <div key={`${rowIdx}`} style={style}>
         {children}
@@ -103,6 +98,17 @@ class VirtualizedTableHandy extends Component {
         }}
       >{`COL${rowIdx}`}</div>
     ),
+    renderFixedCorner: (style, ref) => (
+      <div
+        ref={ref}
+        style={{
+          ...style,
+          backgroundColor: '#ffffff',
+          border: '1px solid black',
+          boxSizing: 'border-box',
+        }}
+      />
+    ),
     onChangeRowIdx: rowIdx => {},
     onChangeColIdx: colIdx => {},
     innerRef: el => {},
@@ -148,13 +154,13 @@ class VirtualizedTableHandy extends Component {
         isFixedCol,
         fixedRowHeight,
         fixedColWidth,
-        fixedCornerStyle,
         renderRow,
         renderItem,
         renderFixedRow,
         renderFixedRowItem,
         renderFixedCol,
         renderFixedColItem,
+        renderFixedCorner,
         innerRef,
       },
 
@@ -230,7 +236,6 @@ class VirtualizedTableHandy extends Component {
     let fixedCorner_;
     if (isFixedRow && isFixedCol) {
       const style = {
-        ...fixedCornerStyle,
         position: 'absolute',
         width: `${fixedColWidth}px`,
         height: `${fixedRowHeight}px`,
@@ -238,7 +243,7 @@ class VirtualizedTableHandy extends Component {
         left: 0,
         zIndex: 8,
       };
-      fixedCorner_ = <div ref={_fixedCorner} style={style} />;
+      fixedCorner_ = renderFixedCorner(style, _fixedCorner);
     }
 
     // make rows

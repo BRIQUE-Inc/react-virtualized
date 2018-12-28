@@ -5,10 +5,12 @@ import Scroller from '../../1-atoms/scroller/scroller';
 import TableCell from '../../1-atoms/table-cell/table-cell';
 import TableContainer from '../../1-atoms/table-container/table-container';
 
-/* ===== Main component ===== */
+/* ======= Component ======= */
+
+/* === Main === */
 
 class VirtualizedTable extends Component {
-  // === lifecycle functions === //
+  // --- lifecycle functions --- //
 
   constructor(props) {
     super(props);
@@ -195,16 +197,10 @@ class VirtualizedTable extends Component {
     );
   }
 
-  // === event handlers === //
+  // --- event handlers --- //
 
   _onScroll({ target: { scrollTop, scrollLeft } }) {
     const {
-      _fixedRow,
-      _fixedCol,
-      _fixedCorner,
-      _afterChangeRowIdx,
-      _afterChangeColIdx,
-      _afterChangeRowColIdx,
       props: {
         itemHeight,
         itemWidth,
@@ -215,20 +211,36 @@ class VirtualizedTable extends Component {
         renderRowCount,
         renderColCount,
       },
+
       state: { rowIdx, colIdx },
+
+      // refs
+      _fixedRow,
+      _fixedCol,
+      _fixedCorner,
+
+      // other functions
+      _afterChangeRowIdx,
+      _afterChangeColIdx,
+      _afterChangeRowColIdx,
     } = this;
+
     if (isFixedRow) {
       _fixedRow.current.style.top = `${scrollTop}px`;
     }
+
     if (isFixedCol) {
       _fixedCol.current.style.left = `${scrollLeft}px`;
     }
+
     if (isFixedRow && isFixedCol) {
       _fixedCorner.current.style.top = `${scrollTop}px`;
       _fixedCorner.current.style.left = `${scrollLeft}px`;
     }
+
     const currentRowIdx = Math.floor(scrollTop / itemHeight);
     const currentColIdx = Math.floor(scrollLeft / itemWidth);
+
     if (rowIdx !== currentRowIdx && colIdx !== currentColIdx) {
       const maxRowIdx = rowCount - renderRowCount;
       const maxColIdx = colCount - renderColCount;
@@ -253,7 +265,7 @@ class VirtualizedTable extends Component {
     }
   }
 
-  // === other functions === //
+  // --- other functions --- //
 
   _afterChangeRowIdx() {
     const {

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { VirtualizedTableHandy } from '../../src';
+import {
+  HEADER_CELL_BACKGROUND_COLOR,
+  TableCell,
+  VirtualizedTableHandy,
+} from '../../src';
 
 const COL_COUNT = 500;
 const ROW_COUNT = 1000;
@@ -51,13 +55,13 @@ class VirtualizedTableHandyDefault extends Component {
           style={{ boxSizing: 'border-box', border: '1px solid red' }}
           rows={rows}
           cols={cols}
-          renderRowCount={16}
+          renderRowCount={20}
           renderColCount={3}
-          itemHeight={40}
+          itemHeight={35}
           itemWidth={140}
           isFixedRow={true}
           isFixedCol={true}
-          fixedRowHeight={80}
+          fixedRowHeight={40}
           fixedColWidth={40}
           renderItem={_renderItem}
           renderFixedRowItem={_renderFixedRowItem}
@@ -68,7 +72,11 @@ class VirtualizedTableHandyDefault extends Component {
           style={{ width: 0, flexGrow: 1 }}
           value={`
 import React, { Component } from 'react';
-import { VirtualizedTableHandy } from '@brique/react-virtualized';
+import {
+  HEADER_CELL_BACKGROUND_COLOR,
+  TableCell,
+  VirtualizedTableHandy,
+} from '@brique/react-virtualized';
 
 class VirtualizedTableHandyDefault extends Component {
   constructor(props) {
@@ -100,13 +108,13 @@ class VirtualizedTableHandyDefault extends Component {
         style={{ boxSizing: 'border-box', border: '1px solid red' }}
         rows={rows}
         cols={cols}
-        renderRowCount={16}
+        renderRowCount={20}
         renderColCount={3}
-        itemHeight={40}
+        itemHeight={35}
         itemWidth={140}
         isFixedRow={true}
         isFixedCol={true}
-        fixedRowHeight={80}
+        fixedRowHeight={40}
         fixedColWidth={40}
         renderItem={_renderItem}
         renderFixedRowItem={_renderFixedRowItem}
@@ -117,49 +125,29 @@ class VirtualizedTableHandyDefault extends Component {
 
   _renderItem(row, col, rowIdx, colIdx, style) {
     return (
-      <div
-        key={\`\${rowIdx},\${colIdx}\`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={\`\${rowIdx},\${colIdx}\`} style={style}>
         {row && col && row[col.key]}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedRowItem(col, colIdx, style) {
     return (
-      <div
+      <TableCell
         key={\`-1,\${colIdx}\`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
       >
         {col && col.value}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedColItem(row, rowIdx, style) {
     return (
-      <div
-        key={\`\${rowIdx},-1\`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={\`\${rowIdx},-1\`} style={style}>
         {rowIdx}
-      </div>
+      </TableCell>
     );
   }
 }
@@ -173,49 +161,29 @@ export default VirtualizedTableHandyDefault;
 
   _renderItem(row, col, rowIdx, colIdx, style) {
     return (
-      <div
-        key={`${rowIdx},${colIdx}`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={`${rowIdx},${colIdx}`} style={style}>
         {row && col && row[col.key]}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedRowItem(col, colIdx, style) {
     return (
-      <div
+      <TableCell
         key={`-1,${colIdx}`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
       >
         {col && col.value}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedColItem(row, rowIdx, style) {
     return (
-      <div
-        key={`${rowIdx},-1`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={`${rowIdx},-1`} style={style}>
         {rowIdx}
-      </div>
+      </TableCell>
     );
   }
 }

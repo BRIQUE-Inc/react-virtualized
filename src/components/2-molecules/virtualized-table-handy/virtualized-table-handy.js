@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { HEADER_CELL_BACKGROUND_COLOR } from '../../../assets/js/constants';
 import Scroller from '../../1-atoms/scroller/scroller';
+import TableCell from '../../1-atoms/table-cell/table-cell';
 import TableContainer from '../../1-atoms/table-container/table-container';
 
-/* ===== Main component ===== */
+/* ======= Component ======= */
+
+/* === Main === */
 
 class VirtualizedTableHandy extends Component {
   static propTypes = {
@@ -56,15 +60,10 @@ class VirtualizedTableHandy extends Component {
       </div>
     ),
     renderItem: (row, col, rowIdx, colIdx, style) => (
-      <div
+      <TableCell
         key={`${rowIdx},${colIdx}`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >{`${rowIdx}, ${colIdx}`}</div>
+        style={style}
+      >{`${rowIdx}, ${colIdx}`}</TableCell>
     ),
     renderFixedRow: (cols, style, children, ref) => (
       <div ref={ref} style={style}>
@@ -72,15 +71,11 @@ class VirtualizedTableHandy extends Component {
       </div>
     ),
     renderFixedRowItem: (col, colIdx, style) => (
-      <div
+      <TableCell
         key={`-1,${colIdx}`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >{`HEAD${colIdx}`}</div>
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
+      >{`HEAD${colIdx}`}</TableCell>
     ),
     renderFixedCol: (rows, style, children, ref) => (
       <div ref={ref} style={style}>
@@ -88,25 +83,13 @@ class VirtualizedTableHandy extends Component {
       </div>
     ),
     renderFixedColItem: (row, rowIdx, style) => (
-      <div
-        key={`${rowIdx},-1`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >{`COL${rowIdx}`}</div>
+      <TableCell key={`${rowIdx},-1`} style={style}>{`COL${rowIdx}`}</TableCell>
     ),
     renderFixedCorner: (style, ref) => (
-      <div
-        ref={ref}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
+      <TableCell
+        innerRef={ref}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
       />
     ),
     onChangeRowIdx: rowIdx => {},
@@ -114,7 +97,7 @@ class VirtualizedTableHandy extends Component {
     innerRef: el => {},
   };
 
-  // === lifecycle functions === //
+  // --- lifecycle functions --- //
 
   constructor(props) {
     super(props);
@@ -308,7 +291,7 @@ class VirtualizedTableHandy extends Component {
     );
   }
 
-  // === event handlers === //
+  // --- event handlers --- //
 
   _onScroll({ target: { scrollTop, scrollLeft } }) {
     const {
@@ -377,7 +360,7 @@ class VirtualizedTableHandy extends Component {
     }
   }
 
-  // === other functions === //
+  // --- other functions --- //
 
   _afterChangeRowIdx() {
     const {

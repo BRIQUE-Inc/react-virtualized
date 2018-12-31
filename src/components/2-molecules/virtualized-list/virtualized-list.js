@@ -1,19 +1,41 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import Scroller from '../../1-atoms/scroller/scroller';
+import TableCell from '../../1-atoms/table-cell/table-cell';
+
+/* ======= Component ======= */
+
+/* === styled === */
+
+const Container = styled.div.attrs(({ width, height }) => ({
+  style: { width, height },
+}))`
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
+
+/* === Main === */
 
 class VirtualizedList extends Component {
+  // --- lifecycle functions --- //
+
   constructor(props) {
     super(props);
+
     this.state = {
       idx: props.initIdx,
     };
+
+    // event handlers
     this._onScroll = this._onScroll.bind(this);
+
+    // other functions
     this._afterChangeIdx = this._afterChangeIdx.bind(this);
   }
 
   render() {
     const {
-      _onScroll,
       props: {
         width,
         height,
@@ -24,9 +46,15 @@ class VirtualizedList extends Component {
         renderItem,
         innerRef,
       },
+
       state: { idx },
+
+      // evnet handlers
+      _onScroll,
     } = this;
+
     const listItems = [];
+
     for (let i = 0; i < renderItemCount; i++) {
       const _idx = i + idx;
       const top = _idx * itemHeight;
@@ -39,38 +67,36 @@ class VirtualizedList extends Component {
       };
       listItems.push(renderItem(_idx, style));
     }
+
     return (
-      <div
-        style={{
-          ...style,
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          width,
-          height,
-        }}
+      <Container
+        width={width}
+        height={height}
+        style={style}
         onScroll={_onScroll}
         ref={innerRef}
       >
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            height: `${itemHeight * itemCount}px`,
-          }}
-        >
+        <Scroller width="100%" height={`${itemHeight * itemCount}px`}>
           {listItems}
-        </div>
-      </div>
+        </Scroller>
+      </Container>
     );
   }
 
+  // --- event handlers --- //
+
   _onScroll({ target: { scrollTop } }) {
     const {
-      _afterChangeIdx,
       props: { itemHeight, itemCount, renderItemCount },
+
       state: { idx },
+
+      // other functions
+      _afterChangeIdx,
     } = this;
+
     const currentIdx = Math.floor(scrollTop / itemHeight);
+
     if (idx !== currentIdx) {
       const maxIdx = itemCount - renderItemCount;
       const updateIdx = currentIdx < maxIdx ? currentIdx : maxIdx;
@@ -78,11 +104,15 @@ class VirtualizedList extends Component {
     }
   }
 
+  // --- other functions --- //
+
   _afterChangeIdx() {
     const {
       props: { onChangeIdx },
+
       state: { idx },
     } = this;
+
     onChangeIdx(idx);
   }
 }
@@ -96,17 +126,9 @@ VirtualizedList.defaultProps = {
   initIdx: 0,
   itemHeight: 40,
   renderItem: (idx, style) => (
-    <div
-      key={idx}
-      style={{
-        ...style,
-        backgroundColor: '#ffffff',
-        border: '1px solid black',
-        boxSizing: 'border-box',
-      }}
-    >
+    <TableCell key={idx} style={style}>
       {idx}
-    </div>
+    </TableCell>
   ),
   onChangeIdx: idx => {},
   innerRef: el => {},

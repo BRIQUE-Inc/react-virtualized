@@ -10,6 +10,65 @@ import TableContainer from '../../1-atoms/table-container/table-container';
 /* === Main === */
 
 class VirtualizedTableVertical extends Component {
+  static propTypes = {
+    height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    style: PropTypes.object,
+    rowCount: PropTypes.number,
+    colCount: PropTypes.number,
+    renderRowCount: PropTypes.number,
+    initRowIdx: PropTypes.number,
+    itemHeight: PropTypes.number,
+    itemWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    isFixedRow: PropTypes.bool,
+    fixedRowHeight: PropTypes.number,
+    renderRow: PropTypes.func,
+    renderItem: PropTypes.func,
+    renderFixedRow: PropTypes.func,
+    renderFixedRowItem: PropTypes.func,
+    onChangeRowIdx: PropTypes.func,
+    innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  };
+
+  static defaultProps = {
+    height: 300,
+    width: 300,
+    style: {},
+    rowCount: 1000,
+    colCount: 10,
+    renderRowCount: 10,
+    initRowIdx: 0,
+    itemHeight: 35,
+    itemWidth: 120,
+    isFixedRow: false,
+    fixedRowHeight: 40,
+    renderRow: (rowIdx, style, children) => (
+      <div key={rowIdx} style={style}>
+        {children}
+      </div>
+    ),
+    renderItem: (rowIdx, colIdx, style) => (
+      <TableCell
+        key={`${rowIdx},${colIdx}`}
+        style={style}
+      >{`${rowIdx}, ${colIdx}`}</TableCell>
+    ),
+    renderFixedRow: (style, children, ref) => (
+      <div ref={ref} style={style}>
+        {children}
+      </div>
+    ),
+    renderFixedRowItem: (colIdx, style) => (
+      <TableCell
+        key={`-1,${colIdx}`}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
+      >{`HEAD${colIdx}`}</TableCell>
+    ),
+    onChangeRowIdx: rowIdx => {},
+    innerRef: el => {},
+  };
+
   // --- lifecycle functions --- //
 
   constructor(props) {
@@ -163,64 +222,5 @@ class VirtualizedTableVertical extends Component {
     onChangeRowIdx(rowIdx);
   }
 }
-
-VirtualizedTableVertical.defaultProps = {
-  height: 300,
-  width: 300,
-  style: {},
-  rowCount: 1000,
-  colCount: 10,
-  renderRowCount: 10,
-  initRowIdx: 0,
-  itemHeight: 35,
-  itemWidth: 120,
-  isFixedRow: false,
-  fixedRowHeight: 40,
-  renderRow: (rowIdx, style, children) => (
-    <div key={rowIdx} style={style}>
-      {children}
-    </div>
-  ),
-  renderItem: (rowIdx, colIdx, style) => (
-    <TableCell
-      key={`${rowIdx},${colIdx}`}
-      style={style}
-    >{`${rowIdx}, ${colIdx}`}</TableCell>
-  ),
-  renderFixedRow: (style, children, ref) => (
-    <div ref={ref} style={style}>
-      {children}
-    </div>
-  ),
-  renderFixedRowItem: (colIdx, style) => (
-    <TableCell
-      key={`-1,${colIdx}`}
-      backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
-      style={style}
-    >{`HEAD${colIdx}`}</TableCell>
-  ),
-  onChangeRowIdx: rowIdx => {},
-  innerRef: el => {},
-};
-
-VirtualizedTableVertical.propTypes = {
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  style: PropTypes.object,
-  rowCount: PropTypes.number,
-  colCount: PropTypes.number,
-  renderRowCount: PropTypes.number,
-  initRowIdx: PropTypes.number,
-  itemHeight: PropTypes.number,
-  itemWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  isFixedRow: PropTypes.bool,
-  fixedRowHeight: PropTypes.number,
-  renderRow: PropTypes.func,
-  renderItem: PropTypes.func,
-  renderFixedRow: PropTypes.func,
-  renderFixedRowItem: PropTypes.func,
-  onChangeRowIdx: PropTypes.func,
-  innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-};
 
 export default VirtualizedTableVertical;

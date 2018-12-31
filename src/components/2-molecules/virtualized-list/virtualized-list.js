@@ -18,6 +18,36 @@ const Container = styled.div.attrs(({ width, height }) => ({
 /* === Main === */
 
 class VirtualizedList extends Component {
+  static propTypes = {
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    style: PropTypes.object,
+    itemCount: PropTypes.number,
+    renderItemCount: PropTypes.number,
+    initIdx: PropTypes.number,
+    itemHeight: PropTypes.number,
+    renderItem: PropTypes.func,
+    onChangeIdx: PropTypes.func,
+    innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  };
+
+  static defaultProps = {
+    width: 300,
+    height: 300,
+    style: {},
+    itemCount: 1000,
+    renderItemCount: 20,
+    initIdx: 0,
+    itemHeight: 40,
+    renderItem: (idx, style) => (
+      <TableCell key={idx} style={style}>
+        {idx}
+      </TableCell>
+    ),
+    onChangeIdx: idx => {},
+    innerRef: el => {},
+  };
+
   // --- lifecycle functions --- //
 
   constructor(props) {
@@ -116,35 +146,5 @@ class VirtualizedList extends Component {
     onChangeIdx(idx);
   }
 }
-
-VirtualizedList.defaultProps = {
-  width: 300,
-  height: 300,
-  style: {},
-  itemCount: 1000,
-  renderItemCount: 20,
-  initIdx: 0,
-  itemHeight: 40,
-  renderItem: (idx, style) => (
-    <TableCell key={idx} style={style}>
-      {idx}
-    </TableCell>
-  ),
-  onChangeIdx: idx => {},
-  innerRef: el => {},
-};
-
-VirtualizedList.propTypes = {
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  style: PropTypes.object,
-  itemCount: PropTypes.number,
-  renderItemCount: PropTypes.number,
-  initIdx: PropTypes.number,
-  itemHeight: PropTypes.number,
-  renderItem: PropTypes.func,
-  onChangeIdx: PropTypes.func,
-  innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-};
 
 export default VirtualizedList;

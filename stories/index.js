@@ -3,6 +3,8 @@ import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 import { storiesOf } from '@storybook/react';
 
+import TableCellDefaultStory from './atoms/table-cell/table-cell.default.stories';
+
 import VirtualizedListDefault from './basic/virtualized-list-default';
 import VirtualizedTableDefault from './basic/virtualized-table-default';
 import VirtualizedTableHandyDefault from './basic/virtualized-table-handy-default';
@@ -17,6 +19,15 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
   }
 `;
+
+storiesOf('Atoms/table-cell', module)
+  .addDecorator(storyFn => (
+    <Fragment>
+      <GlobalStyle />
+      {storyFn()}
+    </Fragment>
+  ))
+  .add('default', () => <TableCellDefaultStory />);
 
 storiesOf('Basic', module)
   .addDecorator(storyFn => (

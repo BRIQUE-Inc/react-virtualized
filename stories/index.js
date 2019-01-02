@@ -12,6 +12,8 @@ import VirtualziedTableVerticalDefault from './basic/virtualized-table-vertical-
 
 import VirtualizedTableHandyCheckbox from './checkbox/virtualized-table-handy-checkbox';
 
+import VirtualizedTableHandyFilter from './filter/virtualized-table-handy-filter.stories';
+
 const GlobalStyle = createGlobalStyle`
   ${reset}
 
@@ -55,3 +57,12 @@ storiesOf('Checkbox', module)
   .add('virtualized table handy checkbox', () => (
     <VirtualizedTableHandyCheckbox />
   ));
+
+storiesOf('Filter', module)
+  .addDecorator(storyFn => (
+    <Fragment>
+      <GlobalStyle />
+      {storyFn()}
+    </Fragment>
+  ))
+  .add('virtualized table handy filter', () => <VirtualizedTableHandyFilter />);

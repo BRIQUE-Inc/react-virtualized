@@ -1,6 +1,6 @@
 {
   "name": "@brique/react-virtualized",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Virtualized grid component of react.js",
   "main": "dist/index.js",
   "scripts": {
@@ -82,6 +82,7 @@
   },
   "babel": {
     "presets": [
+      "@babel/preset-env",
       "@babel/preset-react"
     ],
     "plugins": [

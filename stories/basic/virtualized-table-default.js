@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { VirtualizedTable } from '../../src';
+import {
+  HEADER_CELL_BACKGROUND_COLOR,
+  TableCell,
+  VirtualizedTable,
+} from '../../src';
 
 const _makeCols = idx => [...Array(3)].map((_, j) => ({ colId: idx + j }));
 const _makeRows = (rowIdx, colIdx) =>
-  [...Array(16)].map((_, i) =>
+  [...Array(20)].map((_, i) =>
     [...Array(3)]
       .map((_, j) => colIdx + j)
       .reduce((row, colId) => ({ ...row, [colId]: `${rowIdx + i},${colId}` }), {
@@ -46,13 +50,13 @@ class VirtualizedTableDefault extends Component {
           style={{ boxSizing: 'border-box', border: '1px solid red' }}
           rowCount={10000}
           colCount={400}
-          renderRowCount={16}
+          renderRowCount={20}
           renderColCount={3}
-          itemHeight={40}
+          itemHeight={35}
           itemWidth={140}
           isFixedRow={true}
           isFixedCol={true}
-          fixedRowHeight={80}
+          fixedRowHeight={40}
           fixedColWidth={40}
           renderItem={_renderItem}
           renderFixedRowItem={_renderFixedRowItem}
@@ -66,11 +70,15 @@ class VirtualizedTableDefault extends Component {
           style={{ width: 0, flexGrow: 1 }}
           value={`
 import React, { Component } from 'react';
-import { VirtualizedTable } from '@brique/react-virtualized';
+import {
+  HEADER_CELL_BACKGROUND_COLOR,
+  TableCell,
+  VirtualizedTable,
+} from '@brique/react-virtualized';
 
 const _makeCols = idx => [...Array(3)].map((_, j) => ({ colId: idx + j }));
 const _makeRows = (rowIdx, colIdx) =>
-  [...Array(16)].map((_, i) =>
+  [...Array(20)].map((_, i) =>
     [...Array(3)]
       .map((_, j) => colIdx + j)
       .reduce((row, colId) => ({ ...row, [colId]: \`\${rowIdx + i},\${colId}\` }), {
@@ -112,13 +120,13 @@ class VirtualizedTableDefault extends Component {
         style={{ boxSizing: 'border-box', border: '1px solid red' }}
         rowCount={10000}
         colCount={400}
-        renderRowCount={16}
+        renderRowCount={20}
         renderColCount={3}
-        itemHeight={40}
+        itemHeight={35}
         itemWidth={140}
         isFixedRow={true}
         isFixedCol={true}
-        fixedRowHeight={80}
+        fixedRowHeight={40}
         fixedColWidth={40}
         renderItem={_renderItem}
         renderFixedRowItem={_renderFixedRowItem}
@@ -136,58 +144,42 @@ class VirtualizedTableDefault extends Component {
 
   _renderItem(rowIdx, colIdx, style) {
     const { colIdx: startColIdx, rowIdx: startRowIdx, cols, rows } = this.state;
+
     const colKey = colIdx - startColIdx;
     const col = cols[colKey];
     const rowKey = rowIdx - startRowIdx;
     const row = rows[rowKey];
     const content = row && col && row[col.colId];
+
     return (
-      <div
-        key={\`\${rowIdx},\${colIdx}\`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={\`\${rowIdx},\${colIdx}\`} style={style}>
         {content}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedRowItem(colIdx, style) {
     const { colIdx: startColIdx, cols } = this.state;
+
     const key = colIdx - startColIdx;
     const col = cols[key];
+
     return (
-      <div
+      <TableCell
         key={\`-1,\${colIdx}\`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
       >
         {col && \`COL_\${col.colId}\`}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedColItem(rowIdx, style) {
     return (
-      <div
-        key={\`\${rowIdx},-1\`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={\`\${rowIdx},-1\`} style={style}>
         {rowIdx}
-      </div>
+      </TableCell>
     );
   }
 
@@ -218,58 +210,42 @@ export default VirtualizedTableDefault;
 
   _renderItem(rowIdx, colIdx, style) {
     const { colIdx: startColIdx, rowIdx: startRowIdx, cols, rows } = this.state;
+
     const colKey = colIdx - startColIdx;
     const col = cols[colKey];
     const rowKey = rowIdx - startRowIdx;
     const row = rows[rowKey];
     const content = row && col && row[col.colId];
+
     return (
-      <div
-        key={`${rowIdx},${colIdx}`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={`${rowIdx},${colIdx}`} style={style}>
         {content}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedRowItem(colIdx, style) {
     const { colIdx: startColIdx, cols } = this.state;
+
     const key = colIdx - startColIdx;
     const col = cols[key];
+
     return (
-      <div
+      <TableCell
         key={`-1,${colIdx}`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
       >
         {col && `COL_${col.colId}`}
-      </div>
+      </TableCell>
     );
   }
 
   _renderFixedColItem(rowIdx, style) {
     return (
-      <div
-        key={`${rowIdx},-1`}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={`${rowIdx},-1`} style={style}>
         {rowIdx}
-      </div>
+      </TableCell>
     );
   }
 

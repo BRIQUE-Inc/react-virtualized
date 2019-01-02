@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { VirtualizedList } from '../../src';
+import { TableCell, VirtualizedList } from '../../src';
 
 const _makeItems = idx => [...Array(40)].map((_, i) => ({ id: idx + i }));
 
@@ -33,7 +33,7 @@ class VirtualizedListDefault extends Component {
           style={{ width: 0, flexGrow: 1 }}
           value={`
 import React, { Component } from 'react';
-import { VirtualizedList } from '@brique/react-virtualized';
+import { TableCell, VirtualizedList } from '@brique/react-virtualized';
 
 const _makeItems = idx => [...Array(40)].map((_, i) => ({ id: idx + i }));
 
@@ -70,14 +70,9 @@ class VirtualizedListDefault extends Component {
     const item = listItems[itemKey];
     const content = item && item.id;
     return (
-      <div
+      <TableCell
         key={idx}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
+        style={style}
       >
         {content}
       </div>
@@ -107,17 +102,9 @@ export default VirtualizedListDefault;
     const item = listItems[itemKey];
     const content = item && item.id;
     return (
-      <div
-        key={idx}
-        style={{
-          ...style,
-          backgroundColor: '#ffffff',
-          border: '1px solid black',
-          boxSizing: 'border-box',
-        }}
-      >
+      <TableCell key={idx} style={style}>
         {content}
-      </div>
+      </TableCell>
     );
   }
 

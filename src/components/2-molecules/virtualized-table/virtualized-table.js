@@ -1,12 +1,103 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { HEADER_CELL_BACKGROUND_COLOR } from '../../../assets/js/constants';
 import Scroller from '../../1-atoms/scroller/scroller';
+import TableCell from '../../1-atoms/table-cell/table-cell';
 import TableContainer from '../../1-atoms/table-container/table-container';
 
-/* ===== Main component ===== */
+/* ======= Component ======= */
+
+/* === Main === */
 
 class VirtualizedTable extends Component {
-  // === lifecycle functions === //
+  static propTypes = {
+    height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    style: PropTypes.object,
+    rowCount: PropTypes.number,
+    colCount: PropTypes.number,
+    renderRowCount: PropTypes.number,
+    renderColCount: PropTypes.number,
+    initRowIdx: PropTypes.number,
+    initColIdx: PropTypes.number,
+    itemHeight: PropTypes.number,
+    itemWidth: PropTypes.number,
+    isFixedRow: PropTypes.bool,
+    isFixedCol: PropTypes.bool,
+    fixedRowHeight: PropTypes.number,
+    fixedColWidth: PropTypes.number,
+    renderRow: PropTypes.func,
+    renderItem: PropTypes.func,
+    renderFixedRow: PropTypes.func,
+    renderFixedRowItem: PropTypes.func,
+    renderFixedCol: PropTypes.func,
+    renderFixedColItem: PropTypes.func,
+    renderFixedCorner: PropTypes.func,
+    onChangeRowIdx: PropTypes.func,
+    onChangeColIdx: PropTypes.func,
+    innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  };
+
+  static defaultProps = {
+    height: 300,
+    width: 300,
+    style: {},
+    rowCount: 1000,
+    colCount: 100,
+    renderRowCount: 10,
+    renderColCount: 3,
+    initRowIdx: 0,
+    initColIdx: 0,
+    itemHeight: 35,
+    itemWidth: 120,
+    isFixedRow: false,
+    isFixedCol: false,
+    fixedRowHeight: 40,
+    fixedColWidth: 40,
+    renderRow: (rowIdx, style, children) => (
+      <div key={`${rowIdx}`} style={style}>
+        {children}
+      </div>
+    ),
+    renderItem: (rowIdx, colIdx, style) => (
+      <TableCell
+        key={`${rowIdx},${colIdx}`}
+        style={style}
+      >{`${rowIdx}, ${colIdx}`}</TableCell>
+    ),
+    renderFixedRow: (style, children, ref) => (
+      <div ref={ref} style={style}>
+        {children}
+      </div>
+    ),
+    renderFixedRowItem: (colIdx, style) => (
+      <TableCell
+        key={`-1,${colIdx}`}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
+      >{`HEAD${colIdx}`}</TableCell>
+    ),
+    renderFixedCol: (style, children, ref) => (
+      <div ref={ref} style={style}>
+        {children}
+      </div>
+    ),
+    renderFixedColItem: (rowIdx, style) => (
+      <TableCell key={`${rowIdx},-1`} style={style}>{`COL${rowIdx}`}</TableCell>
+    ),
+    renderFixedCorner: (style, ref) => (
+      <TableCell
+        innerRef={ref}
+        backgroundColor={HEADER_CELL_BACKGROUND_COLOR}
+        style={style}
+      />
+    ),
+    onChangeRowIdx: rowIdx => {},
+    onChangeColIdx: colIdx => {},
+    innerRef: el => {},
+  };
+
+  // --- lifecycle functions --- //
 
   constructor(props) {
     super(props);
@@ -193,16 +284,10 @@ class VirtualizedTable extends Component {
     );
   }
 
-  // === event handlers === //
+  // --- event handlers --- //
 
   _onScroll({ target: { scrollTop, scrollLeft } }) {
     const {
-      _fixedRow,
-      _fixedCol,
-      _fixedCorner,
-      _afterChangeRowIdx,
-      _afterChangeColIdx,
-      _afterChangeRowColIdx,
       props: {
         itemHeight,
         itemWidth,
@@ -213,20 +298,36 @@ class VirtualizedTable extends Component {
         renderRowCount,
         renderColCount,
       },
+
       state: { rowIdx, colIdx },
+
+      // refs
+      _fixedRow,
+      _fixedCol,
+      _fixedCorner,
+
+      // other functions
+      _afterChangeRowIdx,
+      _afterChangeColIdx,
+      _afterChangeRowColIdx,
     } = this;
+
     if (isFixedRow) {
       _fixedRow.current.style.top = `${scrollTop}px`;
     }
+
     if (isFixedCol) {
       _fixedCol.current.style.left = `${scrollLeft}px`;
     }
+
     if (isFixedRow && isFixedCol) {
       _fixedCorner.current.style.top = `${scrollTop}px`;
       _fixedCorner.current.style.left = `${scrollLeft}px`;
     }
+
     const currentRowIdx = Math.floor(scrollTop / itemHeight);
     const currentColIdx = Math.floor(scrollLeft / itemWidth);
+
     if (rowIdx !== currentRowIdx && colIdx !== currentColIdx) {
       const maxRowIdx = rowCount - renderRowCount;
       const maxColIdx = colCount - renderColCount;
@@ -251,7 +352,7 @@ class VirtualizedTable extends Component {
     }
   }
 
-  // === other functions === //
+  // --- other functions --- //
 
   _afterChangeRowIdx() {
     const {
@@ -278,113 +379,5 @@ class VirtualizedTable extends Component {
     onChangeColIdx(colIdx);
   }
 }
-
-VirtualizedTable.defaultProps = {
-  height: 300,
-  width: 300,
-  style: {},
-  rowCount: 1000,
-  colCount: 100,
-  renderRowCount: 10,
-  renderColCount: 3,
-  initRowIdx: 0,
-  initColIdx: 0,
-  itemHeight: 40,
-  itemWidth: 120,
-  isFixedRow: false,
-  isFixedCol: false,
-  fixedRowHeight: 50,
-  fixedColWidth: 50,
-  renderRow: (rowIdx, style, children) => (
-    <div key={`${rowIdx}`} style={style}>
-      {children}
-    </div>
-  ),
-  renderItem: (rowIdx, colIdx, style) => (
-    <div
-      key={`${rowIdx},${colIdx}`}
-      style={{
-        ...style,
-        backgroundColor: '#ffffff',
-        border: '1px solid black',
-        boxSizing: 'border-box',
-      }}
-    >{`${rowIdx}, ${colIdx}`}</div>
-  ),
-  renderFixedRow: (style, children, ref) => (
-    <div ref={ref} style={style}>
-      {children}
-    </div>
-  ),
-  renderFixedRowItem: (colIdx, style) => (
-    <div
-      key={`-1,${colIdx}`}
-      style={{
-        ...style,
-        backgroundColor: '#ffffff',
-        border: '1px solid black',
-        boxSizing: 'border-box',
-      }}
-    >{`HEAD${colIdx}`}</div>
-  ),
-  renderFixedCol: (style, children, ref) => (
-    <div ref={ref} style={style}>
-      {children}
-    </div>
-  ),
-  renderFixedColItem: (rowIdx, style) => (
-    <div
-      key={`${rowIdx},-1`}
-      style={{
-        ...style,
-        backgroundColor: '#ffffff',
-        border: '1px solid black',
-        boxSizing: 'border-box',
-      }}
-    >{`COL${rowIdx}`}</div>
-  ),
-  renderFixedCorner: (style, ref) => (
-    <div
-      ref={ref}
-      style={{
-        ...style,
-        backgroundColor: '#ffffff',
-        border: '1px solid black',
-        boxSizing: 'border-box',
-      }}
-    />
-  ),
-  onChangeRowIdx: rowIdx => {},
-  onChangeColIdx: colIdx => {},
-  innerRef: el => {},
-};
-
-VirtualizedTable.propTypes = {
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  style: PropTypes.object,
-  rowCount: PropTypes.number,
-  colCount: PropTypes.number,
-  renderRowCount: PropTypes.number,
-  renderColCount: PropTypes.number,
-  initRowIdx: PropTypes.number,
-  initColIdx: PropTypes.number,
-  itemHeight: PropTypes.number,
-  itemWidth: PropTypes.number,
-  isFixedRow: PropTypes.bool,
-  isFixedCol: PropTypes.bool,
-  fixedRowHeight: PropTypes.number,
-  fixedColWidth: PropTypes.number,
-  renderRow: PropTypes.func,
-  renderItem: PropTypes.func,
-  renderFixedRow: PropTypes.func,
-  renderFixedRowItem: PropTypes.func,
-  renderFixedCol: PropTypes.func,
-  renderFixedColItem: PropTypes.func,
-  renderFixedCorner: PropTypes.func,
-  onChangeRowIdx: PropTypes.func,
-  onChangeColIdx: PropTypes.func,
-  innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-};
 
 export default VirtualizedTable;

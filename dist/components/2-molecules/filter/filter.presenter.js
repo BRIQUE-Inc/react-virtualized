@@ -213,19 +213,38 @@ function (_Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _el = this._el,
+      var _this$props2 = this.props,
+          open = _this$props2.open,
+          closeEvents = _this$props2.closeEvents,
+          _el = this._el,
           _onClose = this._onClose;
-      document.body.addEventListener('click', _onClose);
-      document.body.addEventListener('contextmenu', _onClose);
+      open && closeEvents.forEach(function (eventName) {
+        return document.body.addEventListener(eventName, _onClose);
+      });
       document.body.contains(_el) || document.body.appendChild(_el);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      var _this$props3 = this.props,
+          open = _this$props3.open,
+          closeEvents = _this$props3.closeEvents,
+          _onClose = this._onClose;
+      open ? closeEvents.forEach(function (eventName) {
+        return document.body.addEventListener(eventName, _onClose);
+      }) : closeEvents.forEach(function (eventName) {
+        return document.body.removeEventListener(eventName, _onClose);
+      });
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var _el = this._el,
+      var closeEvents = this.props.closeEvents,
+          _el = this._el,
           _onClose = this._onClose;
-      document.body.removeEventListener('click', _onClose);
-      document.body.removeEventListener('contextmenu', _onClose);
+      closeEvents.forEach(function (eventName) {
+        return document.body.removeEventListener(eventName, _onClose);
+      });
       document.body.contains(_el) && document.body.removeChild(_el);
     } // --- event handlers --- //
 
@@ -234,7 +253,7 @@ function (_Component) {
     value: function _onClose(event) {
       var onClose = this.props.onClose,
           _el = this._el;
-      _el.contains(event.target) || onClose();
+      _el.contains(event.target) || onClose(event);
     }
   }, {
     key: "_onChangeFilterValue",
@@ -296,6 +315,7 @@ function (_Component) {
 
 _defineProperty(Filter, "propTypes", {
   open: _propTypes.default.bool,
+  closeEvents: _propTypes.default.arrayOf(_propTypes.default.string),
   x: _propTypes.default.number,
   y: _propTypes.default.number,
   width: _propTypes.default.string,
@@ -310,6 +330,7 @@ _defineProperty(Filter, "propTypes", {
 
 _defineProperty(Filter, "defaultProps", {
   open: false,
+  closeEvents: ['click', 'contextmenu'],
   x: 0,
   y: 0,
   width: '240px',
@@ -318,7 +339,7 @@ _defineProperty(Filter, "defaultProps", {
   renderItem: function renderItem(filter, idx) {
     return "".concat(filter);
   },
-  onClose: function onClose() {},
+  onClose: function onClose(event) {},
   onClickAdd: function onClickAdd(filterValue) {},
   onClickRemove: function onClickRemove(filter) {},
   onClickReset: function onClickReset() {}

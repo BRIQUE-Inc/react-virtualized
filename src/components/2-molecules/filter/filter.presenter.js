@@ -116,6 +116,7 @@ const FilterListItemContainer = styled.div`
 class Filter extends Component {
   static propTypes = {
     open: PropTypes.bool,
+    closeEvents: PropTypes.arrayOf(PropTypes.string),
     x: PropTypes.number,
     y: PropTypes.number,
     width: PropTypes.string,
@@ -130,13 +131,14 @@ class Filter extends Component {
 
   static defaultProps = {
     open: false,
+    closeEvents: ['click', 'contextmenu'],
     x: 0,
     y: 0,
     width: '240px',
     maxHeight: '300px',
     filters: [],
     renderItem: (filter, idx) => `${filter}`,
-    onClose: () => {},
+    onClose: event => {},
     onClickAdd: filterValue => {},
     onClickRemove: filter => {},
     onClickReset: () => {},
@@ -217,6 +219,8 @@ class Filter extends Component {
 
   componentDidMount() {
     const {
+      props: { open, closeEvents },
+
       // elements
       _el,
 
@@ -224,13 +228,34 @@ class Filter extends Component {
       _onClose,
     } = this;
 
-    document.body.addEventListener('click', _onClose);
-    document.body.addEventListener('contextmenu', _onClose);
+    open &&
+      closeEvents.forEach(eventName =>
+        document.body.addEventListener(eventName, _onClose),
+      );
     document.body.contains(_el) || document.body.appendChild(_el);
+  }
+
+  componentDidUpdate() {
+    const {
+      props: { open, closeEvents },
+
+      // event handlers
+      _onClose,
+    } = this;
+
+    open
+      ? closeEvents.forEach(eventName =>
+        document.body.addEventListener(eventName, _onClose),
+      )
+      : closeEvents.forEach(eventName =>
+        document.body.removeEventListener(eventName, _onClose),
+      );
   }
 
   componentWillUnmount() {
     const {
+      props: { closeEvents },
+
       // elements
       _el,
 
@@ -238,8 +263,9 @@ class Filter extends Component {
       _onClose,
     } = this;
 
-    document.body.removeEventListener('click', _onClose);
-    document.body.removeEventListener('contextmenu', _onClose);
+    closeEvents.forEach(eventName =>
+      document.body.removeEventListener(eventName, _onClose),
+    );
     document.body.contains(_el) && document.body.removeChild(_el);
   }
 
@@ -253,7 +279,7 @@ class Filter extends Component {
       _el,
     } = this;
 
-    _el.contains(event.target) || onClose();
+    _el.contains(event.target) || onClose(event);
   }
 
   _onChangeFilterValue({ target: { value } }) {

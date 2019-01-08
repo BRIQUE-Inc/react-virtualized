@@ -12,6 +12,8 @@ import VirtualziedTableVerticalDefault from './basic/virtualized-table-vertical-
 
 import VirtualizedTableHandyCheckbox from './checkbox/virtualized-table-handy-checkbox';
 
+import VirtualizedTableColResize from './col-resize/virtualized-table-col-resize.stories';
+
 import VirtualizedTableHandyFilter from './filter/virtualized-table-handy-filter.stories';
 
 const GlobalStyle = createGlobalStyle`
@@ -66,3 +68,12 @@ storiesOf('Filter', module)
     </Fragment>
   ))
   .add('virtualized table handy filter', () => <VirtualizedTableHandyFilter />);
+
+storiesOf('Column width resize', module)
+  .addDecorator(storyFn => (
+    <Fragment>
+      <GlobalStyle />
+      {storyFn()}
+    </Fragment>
+  ))
+  .add('virtualized table col resize', () => <VirtualizedTableColResize />);

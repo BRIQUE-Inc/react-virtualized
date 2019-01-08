@@ -33,6 +33,12 @@ Object.defineProperty(exports, "VirtualizedTable", {
     return _virtualizedTable.default;
   }
 });
+Object.defineProperty(exports, "VirtualizedTableColResize", {
+  enumerable: true,
+  get: function get() {
+    return _virtualizedTableColResize.default;
+  }
+});
 Object.defineProperty(exports, "VirtualizedTableHandy", {
   enumerable: true,
   get: function get() {
@@ -56,6 +62,8 @@ var _filter = _interopRequireDefault(require("./components/2-molecules/filter/fi
 var _virtualizedList = _interopRequireDefault(require("./components/2-molecules/virtualized-list/virtualized-list"));
 
 var _virtualizedTable = _interopRequireDefault(require("./components/2-molecules/virtualized-table/virtualized-table"));
+
+var _virtualizedTableColResize = _interopRequireDefault(require("./components/2-molecules/virtualized-table-col-resize/virtualized-table-col-resize"));
 
 var _virtualizedTableHandy = _interopRequireDefault(require("./components/2-molecules/virtualized-table-handy/virtualized-table-handy"));
 

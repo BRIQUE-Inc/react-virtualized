@@ -39,6 +39,16 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _templateObject7() {
+  var data = _taggedTemplateLiteral(["\n  width: 0;\n  flex-grow: 1;\n"]);
+
+  _templateObject7 = function _templateObject7() {
+    return data;
+  };
+
+  return data;
+}
+
 function _templateObject6() {
   var data = _taggedTemplateLiteral(["\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  height: 24px;\n  min-height: 24px;\n\n  padding: 5px 4px;\n\n  color: #858585;\n"]);
 
@@ -141,6 +151,8 @@ var ButtonArea = _styledComponents.default.div(_templateObject4());
 var FilterInput = _styledComponents.default.input(_templateObject5());
 
 var FilterListItemContainer = _styledComponents.default.div(_templateObject6());
+
+var RadioButtons = _styledComponents.default.div(_templateObject7());
 /* === Main === */
 
 
@@ -157,7 +169,8 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Filter).call(this, props));
     _this.state = {
-      filterValue: ''
+      filterValue: '',
+      andOr: 'and'
     }; // elements
 
     _this._el = document.createElement('div'); // event handlers
@@ -166,7 +179,8 @@ function (_Component) {
     _this._onChangeFilterValue = _this._onChangeFilterValue.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this._onClickAddButton = _this._onClickAddButton.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this._onClickRemoveButton = _this._onClickRemoveButton.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this._onClickResetButton = _this._onClickResetButton.bind(_assertThisInitialized(_assertThisInitialized(_this))); // render functions
+    _this._onClickResetButton = _this._onClickResetButton.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this._onChangeAndOr = _this._onChangeAndOr.bind(_assertThisInitialized(_assertThisInitialized(_this))); // render functions
 
     _this._renderFilterListItem = _this._renderFilterListItem.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
@@ -182,11 +196,14 @@ function (_Component) {
           width = _this$props.width,
           maxHeight = _this$props.maxHeight,
           filters = _this$props.filters,
-          filterValue = this.state.filterValue,
+          _this$state = this.state,
+          filterValue = _this$state.filterValue,
+          andOr = _this$state.andOr,
           _el = this._el,
           _onChangeFilterValue = this._onChangeFilterValue,
           _onClickAddButton = this._onClickAddButton,
           _onClickResetButton = this._onClickResetButton,
+          _onChangeAndOr = this._onChangeAndOr,
           _renderFilterListItem = this._renderFilterListItem;
       return _reactDom.default.createPortal(_react.default.createElement(Container, {
         open: open,
@@ -204,7 +221,19 @@ function (_Component) {
         width: "64px"
       }, "Add")), _react.default.createElement(FilterListArea, {
         onScroll: _stopPropagation
-      }, filters.map(_renderFilterListItem)), _react.default.createElement(ButtonArea, null, _react.default.createElement(_button.default, {
+      }, filters.map(_renderFilterListItem)), _react.default.createElement(ButtonArea, null, filters.length > 1 && _react.default.createElement(RadioButtons, null, _react.default.createElement("label", null, _react.default.createElement("span", null, "AND"), _react.default.createElement("input", {
+        type: "radio",
+        value: "and",
+        name: "and-or",
+        checked: andOr === 'and',
+        onChange: _onChangeAndOr
+      })), _react.default.createElement("label", null, _react.default.createElement("span", null, "OR"), _react.default.createElement("input", {
+        type: "radio",
+        value: "or",
+        name: "and-or",
+        checked: andOr === 'or',
+        onChange: _onChangeAndOr
+      }))), _react.default.createElement(_button.default, {
         onClick: _onClickResetButton,
         width: "64px",
         theme: "text"
@@ -269,8 +298,10 @@ function (_Component) {
       _stopPropagation(event);
 
       var onClickAdd = this.props.onClickAdd,
-          filterValue = this.state.filterValue;
-      onClickAdd(filterValue);
+          _this$state2 = this.state,
+          filterValue = _this$state2.filterValue,
+          andOr = _this$state2.andOr;
+      onClickAdd(filterValue, andOr);
       this.setState({
         filterValue: ''
       });
@@ -280,16 +311,28 @@ function (_Component) {
     value: function _onClickRemoveButton(event, filter) {
       _stopPropagation(event);
 
-      var onClickRemove = this.props.onClickRemove;
-      onClickRemove(filter);
+      var onClickRemove = this.props.onClickRemove,
+          andOr = this.state.andOr;
+      onClickRemove(filter, andOr);
     }
   }, {
     key: "_onClickResetButton",
     value: function _onClickResetButton(event) {
       _stopPropagation(event);
 
-      var onClickReset = this.props.onClickReset;
-      onClickReset();
+      var _this$props4 = this.props,
+          filters = _this$props4.filters,
+          onClickReset = _this$props4.onClickReset,
+          andOr = this.state.andOr;
+      onClickReset(filters, andOr);
+    }
+  }, {
+    key: "_onChangeAndOr",
+    value: function _onChangeAndOr(_ref3) {
+      var value = _ref3.target.value;
+      this.setState({
+        andOr: value
+      });
     } // --- render functions --- //
 
   }, {
@@ -340,9 +383,9 @@ _defineProperty(Filter, "defaultProps", {
     return "".concat(filter);
   },
   onClose: function onClose(event) {},
-  onClickAdd: function onClickAdd(filterValue) {},
-  onClickRemove: function onClickRemove(filter) {},
-  onClickReset: function onClickReset() {}
+  onClickAdd: function onClickAdd(filterValue, andOr) {},
+  onClickRemove: function onClickRemove(filter, andOr) {},
+  onClickReset: function onClickReset(filters, andOr) {}
 });
 
 var _default = Filter;

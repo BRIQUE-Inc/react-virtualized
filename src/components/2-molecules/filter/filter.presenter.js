@@ -111,6 +111,11 @@ const FilterListItemContainer = styled.div`
   color: #858585;
 `;
 
+const RadioButtons = styled.div`
+  width: 0;
+  flex-grow: 1;
+`;
+
 /* === Main === */
 
 class Filter extends Component {
@@ -139,9 +144,9 @@ class Filter extends Component {
     filters: [],
     renderItem: (filter, idx) => `${filter}`,
     onClose: event => {},
-    onClickAdd: filterValue => {},
-    onClickRemove: filter => {},
-    onClickReset: () => {},
+    onClickAdd: (filterValue, andOr) => {},
+    onClickRemove: (filter, andOr) => {},
+    onClickReset: (filters, andOr) => {},
   };
 
   // --- lifecycle functions --- //
@@ -151,6 +156,7 @@ class Filter extends Component {
 
     this.state = {
       filterValue: '',
+      andOr: 'and',
     };
 
     // elements
@@ -162,6 +168,7 @@ class Filter extends Component {
     this._onClickAddButton = this._onClickAddButton.bind(this);
     this._onClickRemoveButton = this._onClickRemoveButton.bind(this);
     this._onClickResetButton = this._onClickResetButton.bind(this);
+    this._onChangeAndOr = this._onChangeAndOr.bind(this);
 
     // render functions
     this._renderFilterListItem = this._renderFilterListItem.bind(this);
@@ -171,7 +178,7 @@ class Filter extends Component {
     const {
       props: { open, x, y, width, maxHeight, filters },
 
-      state: { filterValue },
+      state: { filterValue, andOr },
 
       // elements
       _el,
@@ -180,6 +187,7 @@ class Filter extends Component {
       _onChangeFilterValue,
       _onClickAddButton,
       _onClickResetButton,
+      _onChangeAndOr,
 
       // render functions
       _renderFilterListItem,
@@ -208,6 +216,30 @@ class Filter extends Component {
           {filters.map(_renderFilterListItem)}
         </FilterListArea>
         <ButtonArea>
+          {filters.length > 1 && (
+            <RadioButtons>
+              <label>
+                <span>AND</span>
+                <input
+                  type="radio"
+                  value="and"
+                  name="and-or"
+                  checked={andOr === 'and'}
+                  onChange={_onChangeAndOr}
+                />
+              </label>
+              <label>
+                <span>OR</span>
+                <input
+                  type="radio"
+                  value="or"
+                  name="and-or"
+                  checked={andOr === 'or'}
+                  onChange={_onChangeAndOr}
+                />
+              </label>
+            </RadioButtons>
+          )}
           <Button onClick={_onClickResetButton} width="64px" theme="text">
             Reset
           </Button>
@@ -292,10 +324,10 @@ class Filter extends Component {
     const {
       props: { onClickAdd },
 
-      state: { filterValue },
+      state: { filterValue, andOr },
     } = this;
 
-    onClickAdd(filterValue);
+    onClickAdd(filterValue, andOr);
     this.setState({ filterValue: '' });
   }
 
@@ -304,19 +336,27 @@ class Filter extends Component {
 
     const {
       props: { onClickRemove },
+
+      state: { andOr },
     } = this;
 
-    onClickRemove(filter);
+    onClickRemove(filter, andOr);
   }
 
   _onClickResetButton(event) {
     _stopPropagation(event);
 
     const {
-      props: { onClickReset },
+      props: { filters, onClickReset },
+
+      state: { andOr },
     } = this;
 
-    onClickReset();
+    onClickReset(filters, andOr);
+  }
+
+  _onChangeAndOr({ target: { value } }) {
+    this.setState({ andOr: value });
   }
 
   // --- render functions --- //

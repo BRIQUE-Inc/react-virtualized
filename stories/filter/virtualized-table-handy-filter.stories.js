@@ -163,7 +163,9 @@ class VirtualizedTableHandyFilter extends Component {
     });
   }
 
-  _onAddFilter(filterValue) {
+  _onAddFilter(filterValue, andOr) {
+    console.log(andOr);
+    
     const {
       state: { filters, filterColKey },
 
@@ -187,7 +189,9 @@ class VirtualizedTableHandyFilter extends Component {
       }, _filterRows);
   }
 
-  _onRemoveFilter(filter) {
+  _onRemoveFilter(filter, andOr) {
+    console.log(andOr);
+
     const {
       // other functions
       _filterRows,
@@ -207,7 +211,9 @@ class VirtualizedTableHandyFilter extends Component {
     }, _filterRows);
   }
 
-  _onResetFilter() {
+  _onResetFilter(filters, andOr) {
+    console.log(filters, andOr);
+    
     const {
       // other functions
       _filterRows,
@@ -450,7 +456,9 @@ class VirtualizedTableHandyFilter extends Component {
     });
   }
 
-  _onAddFilter(filterValue) {
+  _onAddFilter(filterValue, andOr) {
+    console.log(andOr);
+
     const {
       state: { filters, filterColKey },
 
@@ -477,7 +485,9 @@ class VirtualizedTableHandyFilter extends Component {
       }, _filterRows);
   }
 
-  _onRemoveFilter(filter) {
+  _onRemoveFilter(filter, andOr) {
+    console.log(andOr);
+
     const {
       // other functions
       _filterRows,
@@ -497,7 +507,9 @@ class VirtualizedTableHandyFilter extends Component {
     }, _filterRows);
   }
 
-  _onResetFilter() {
+  _onResetFilter(filters, andOr) {
+    console.log(filters, andOr);
+
     const {
       // other functions
       _filterRows,

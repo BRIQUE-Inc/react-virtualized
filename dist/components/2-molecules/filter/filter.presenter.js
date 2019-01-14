@@ -330,6 +330,8 @@ function (_Component) {
     key: "_onChangeAndOr",
     value: function _onChangeAndOr(_ref3) {
       var value = _ref3.target.value;
+      var onChangeType = this.props.onChangeType;
+      onChangeType(value);
       this.setState({
         andOr: value
       });
@@ -385,7 +387,8 @@ _defineProperty(Filter, "defaultProps", {
   onClose: function onClose(event) {},
   onClickAdd: function onClickAdd(filterValue, andOr) {},
   onClickRemove: function onClickRemove(filter, andOr) {},
-  onClickReset: function onClickReset(filters, andOr) {}
+  onClickReset: function onClickReset(filters, andOr) {},
+  onChangeType: function onChangeType(type) {}
 });
 
 var _default = Filter;

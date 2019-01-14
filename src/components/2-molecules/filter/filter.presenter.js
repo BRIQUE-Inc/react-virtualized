@@ -127,6 +127,7 @@ class Filter extends Component {
     width: PropTypes.string,
     maxHeight: PropTypes.string,
     filters: PropTypes.array,
+    showTypeAlways: PropTypes.bool,
     renderItem: PropTypes.func,
     onClose: PropTypes.func,
     onClickAdd: PropTypes.func,
@@ -142,6 +143,7 @@ class Filter extends Component {
     width: '240px',
     maxHeight: '300px',
     filters: [],
+    showTypeAlways: false,
     renderItem: (filter, idx) => `${filter}`,
     onClose: event => {},
     onClickAdd: (filterValue, andOr) => {},
@@ -177,7 +179,7 @@ class Filter extends Component {
 
   render() {
     const {
-      props: { open, x, y, width, maxHeight, filters },
+      props: { open, x, y, width, maxHeight, filters, showTypeAlways },
 
       state: { filterValue, andOr },
 
@@ -217,7 +219,7 @@ class Filter extends Component {
           {filters.map(_renderFilterListItem)}
         </FilterListArea>
         <ButtonArea>
-          {filters.length > 1 && (
+          {(showTypeAlways || filters.length > 1) && (
             <RadioButtons>
               <label>
                 <span>AND</span>

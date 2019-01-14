@@ -147,6 +147,7 @@ class Filter extends Component {
     onClickAdd: (filterValue, andOr) => {},
     onClickRemove: (filter, andOr) => {},
     onClickReset: (filters, andOr) => {},
+    onChangeType: type => {},
   };
 
   // --- lifecycle functions --- //
@@ -356,6 +357,11 @@ class Filter extends Component {
   }
 
   _onChangeAndOr({ target: { value } }) {
+    const {
+      props: { onChangeType },
+    } = this;
+
+    onChangeType(value);
     this.setState({ andOr: value });
   }
 

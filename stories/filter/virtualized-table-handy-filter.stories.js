@@ -138,6 +138,7 @@ class VirtualizedTableHandyFilter extends Component {
           onClickAdd={_onAddFilter}
           onClickRemove={_onRemoveFilter}
           onClickReset={_onResetFilter}
+          onChangeType={console.log}
         />
       </Fragment>
     );
@@ -430,6 +431,7 @@ class VirtualizedTableHandyFilter extends Component {
           onClickAdd={_onAddFilter}
           onClickRemove={_onRemoveFilter}
           onClickReset={_onResetFilter}
+          onChangeType={console.log}
         />
         <textarea style={{ width: 0, flexGrow: 1 }} disabled value={CODE} />
       </div>

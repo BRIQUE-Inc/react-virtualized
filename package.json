@@ -1,6 +1,6 @@
 {
   "name": "@brique/react-virtualized",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Virtualized grid component of react.js",
   "main": "dist/index.js",
   "scripts": {

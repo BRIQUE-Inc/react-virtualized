@@ -196,6 +196,7 @@ function (_Component) {
           width = _this$props.width,
           maxHeight = _this$props.maxHeight,
           filters = _this$props.filters,
+          showTypeAlways = _this$props.showTypeAlways,
           _this$state = this.state,
           filterValue = _this$state.filterValue,
           andOr = _this$state.andOr,
@@ -221,7 +222,7 @@ function (_Component) {
         width: "64px"
       }, "Add")), _react.default.createElement(FilterListArea, {
         onScroll: _stopPropagation
-      }, filters.map(_renderFilterListItem)), _react.default.createElement(ButtonArea, null, filters.length > 1 && _react.default.createElement(RadioButtons, null, _react.default.createElement("label", null, _react.default.createElement("span", null, "AND"), _react.default.createElement("input", {
+      }, filters.map(_renderFilterListItem)), _react.default.createElement(ButtonArea, null, (showTypeAlways || filters.length > 1) && _react.default.createElement(RadioButtons, null, _react.default.createElement("label", null, _react.default.createElement("span", null, "AND"), _react.default.createElement("input", {
         type: "radio",
         value: "and",
         name: "and-or",
@@ -366,6 +367,7 @@ _defineProperty(Filter, "propTypes", {
   width: _propTypes.default.string,
   maxHeight: _propTypes.default.string,
   filters: _propTypes.default.array,
+  showTypeAlways: _propTypes.default.bool,
   renderItem: _propTypes.default.func,
   onClose: _propTypes.default.func,
   onClickAdd: _propTypes.default.func,
@@ -381,6 +383,7 @@ _defineProperty(Filter, "defaultProps", {
   width: '240px',
   maxHeight: '300px',
   filters: [],
+  showTypeAlways: false,
   renderItem: function renderItem(filter, idx) {
     return "".concat(filter);
   },

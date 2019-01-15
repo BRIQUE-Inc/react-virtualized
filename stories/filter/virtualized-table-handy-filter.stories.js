@@ -133,6 +133,7 @@ class VirtualizedTableHandyFilter extends Component {
           x={filterX}
           y={filterY}
           filters={currentFilters}
+          showTypeAlways={true}
           renderItem={_renderFilterItem}
           onClose={_onCloseFilter}
           onClickAdd={_onAddFilter}
@@ -426,6 +427,7 @@ class VirtualizedTableHandyFilter extends Component {
           x={filterX}
           y={filterY}
           filters={currentFilters}
+          showTypeAlways={true}
           renderItem={_renderFilterItem}
           onClose={_onCloseFilter}
           onClickAdd={_onAddFilter}

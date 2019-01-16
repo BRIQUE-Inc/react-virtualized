@@ -122,37 +122,45 @@ class Filter extends Component {
   static propTypes = {
     open: PropTypes.bool,
     closeEvents: PropTypes.arrayOf(PropTypes.string),
+    onClose: PropTypes.func,
+
     x: PropTypes.number,
     y: PropTypes.number,
+
     width: PropTypes.string,
     maxHeight: PropTypes.string,
+
     filters: PropTypes.array,
-    filterType: PropTypes.oneOf(['and', 'or']),
-    showTypeAlways: PropTypes.bool,
     renderItem: PropTypes.func,
-    onClose: PropTypes.func,
     onClickAdd: PropTypes.func,
     onClickRemove: PropTypes.func,
     onClickReset: PropTypes.func,
-    onChangeType: PropTypes.func,
+
+    filterType: PropTypes.oneOf(['and', 'or']),
+    showFilterType: PropTypes.bool,
+    onChangeFilterType: PropTypes.func,
   };
 
   static defaultProps = {
     open: false,
     closeEvents: ['click', 'contextmenu'],
+    onClose: event => {},
+
     x: 0,
     y: 0,
+
     width: '240px',
     maxHeight: '300px',
+
     filters: [],
-    filterType: 'and',
-    showTypeAlways: false,
     renderItem: (filter, idx) => `${filter}`,
-    onClose: event => {},
-    onClickAdd: (filterValue, andOr) => {},
-    onClickRemove: (filter, andOr) => {},
-    onClickReset: (filters, andOr) => {},
-    onChangeType: type => {},
+    onClickAdd: filterValue => {},
+    onClickRemove: filter => {},
+    onClickReset: filters => {},
+
+    filterType: 'and',
+    showFilterType: false,
+    onChangeFilterType: type => {},
   };
 
   // --- lifecycle functions --- //
@@ -166,6 +174,9 @@ class Filter extends Component {
 
     // elements
     this._el = document.createElement('div');
+
+    // refs
+    this._container = React.createRef();
 
     // event handlers
     this._onClose = this._onClose.bind(this);
@@ -183,19 +194,26 @@ class Filter extends Component {
     const {
       props: {
         open,
+
         x,
         y,
+
         width,
         maxHeight,
+
         filters,
+
         filterType,
-        showTypeAlways,
+        showFilterType,
       },
 
       state: { filterValue },
 
       // elements
       _el,
+
+      // refs
+      _container,
 
       // event handlers
       _onChangeFilterValue,
@@ -207,8 +225,9 @@ class Filter extends Component {
       _renderFilterListItem,
     } = this;
 
-    return ReactDOM.createPortal(
+    const comp = (
       <Container
+        ref={_container}
         open={open}
         top={`${y}px`}
         left={`${x}px`}
@@ -230,7 +249,7 @@ class Filter extends Component {
           {filters.map(_renderFilterListItem)}
         </FilterListArea>
         <ButtonArea>
-          {(showTypeAlways || filters.length > 1) && (
+          {showFilterType && (
             <RadioButtons>
               <label>
                 <span>AND</span>
@@ -258,9 +277,10 @@ class Filter extends Component {
             Reset
           </Button>
         </ButtonArea>
-      </Container>,
-      _el,
+      </Container>
     );
+
+    return ReactDOM.createPortal(comp, _el);
   }
 
   componentDidMount() {
@@ -278,6 +298,7 @@ class Filter extends Component {
       closeEvents.forEach(eventName =>
         document.body.addEventListener(eventName, _onClose),
       );
+
     document.body.contains(_el) || document.body.appendChild(_el);
   }
 
@@ -312,6 +333,7 @@ class Filter extends Component {
     closeEvents.forEach(eventName =>
       document.body.removeEventListener(eventName, _onClose),
     );
+
     document.body.contains(_el) && document.body.removeChild(_el);
   }
 
@@ -321,11 +343,11 @@ class Filter extends Component {
     const {
       props: { onClose },
 
-      // elements
-      _el,
+      // refs
+      _container,
     } = this;
 
-    _el.contains(event.target) || onClose(event);
+    _container.current.contains(event.target) || onClose(event);
   }
 
   _onChangeFilterValue({ target: { value } }) {
@@ -333,48 +355,38 @@ class Filter extends Component {
   }
 
   _onClickAddButton(event) {
-    _stopPropagation(event);
-
     const {
       props: { onClickAdd },
 
-      state: { filterValue, andOr },
+      state: { filterValue },
     } = this;
 
-    onClickAdd(filterValue, andOr);
+    onClickAdd(filterValue);
     this.setState({ filterValue: '' });
   }
 
-  _onClickRemoveButton(event, filter) {
-    _stopPropagation(event);
-
+  _onClickRemoveButton(filter) {
     const {
       props: { onClickRemove },
-
-      state: { andOr },
     } = this;
 
-    onClickRemove(filter, andOr);
+    onClickRemove(filter);
   }
 
   _onClickResetButton(event) {
-    _stopPropagation(event);
-
     const {
       props: { filters, onClickReset },
-
-      state: { andOr },
     } = this;
 
-    onClickReset(filters, andOr);
+    onClickReset(filters);
   }
 
   _onChangeFilterType({ target: { value } }) {
     const {
-      props: { onChangeType },
+      props: { onChangeFilterType },
     } = this;
 
-    onChangeType(value);
+    onChangeFilterType(value);
   }
 
   // --- render functions --- //
@@ -393,7 +405,7 @@ class Filter extends Component {
       <FilterListItemContainer key={idx}>
         {item}
         <Button
-          onClick={e => _onClickRemoveButton(e, filter)}
+          onClick={() => _onClickRemoveButton(filter)}
           width="40px"
           theme="text"
         >

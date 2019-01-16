@@ -64,10 +64,6 @@ class VirtualizedTableHandyFilter extends Component {
       filterColKey: null,
       filterX: 0,
       filterY: 0,
-      filterTypes: cols.reduce((acc, col) => {
-        acc[col.key] = 'and';
-        return acc;
-      }, {}),
       filters: [],
       filteredRows: rows,
     };
@@ -81,7 +77,6 @@ class VirtualizedTableHandyFilter extends Component {
     this._onAddFilter = this._onAddFilter.bind(this);
     this._onRemoveFilter = this._onRemoveFilter.bind(this);
     this._onResetFilter = this._onResetFilter.bind(this);
-    this._onChangeFilterType = this._onChangeFilterType.bind(this);
 
     // render functions
     this._renderItem = this._renderItem.bind(this);
@@ -99,7 +94,6 @@ class VirtualizedTableHandyFilter extends Component {
         filterX,
         filterY,
         filters,
-        filterTypes,
         filteredRows,
       },
 
@@ -111,7 +105,6 @@ class VirtualizedTableHandyFilter extends Component {
       _onAddFilter,
       _onRemoveFilter,
       _onResetFilter,
-      _onChangeFilterType,
 
       // render functions
       _renderItem,
@@ -148,14 +141,11 @@ class VirtualizedTableHandyFilter extends Component {
           x={filterX}
           y={filterY}
           filters={currentFilters}
-          filterType={filterTypes[filterColKey]}
-          showTypeAlways={true}
           renderItem={_renderFilterItem}
           onClose={_onCloseFilter}
           onClickAdd={_onAddFilter}
           onClickRemove={_onRemoveFilter}
           onClickReset={_onResetFilter}
-          onChangeType={_onChangeFilterType}
         />
         <textarea style={{ width: 0, flexGrow: 1 }} disabled value={CODE} />
       </div>
@@ -182,9 +172,7 @@ class VirtualizedTableHandyFilter extends Component {
     });
   }
 
-  _onAddFilter(filterValue, andOr) {
-    console.log(andOr);
-
+  _onAddFilter(filterValue) {
     const {
       state: { filters, filterColKey },
 
@@ -211,9 +199,7 @@ class VirtualizedTableHandyFilter extends Component {
       }, _filterRows);
   }
 
-  _onRemoveFilter(filter, andOr) {
-    console.log(andOr);
-
+  _onRemoveFilter(filter) {
     const {
       // other functions
       _filterRows,
@@ -233,9 +219,7 @@ class VirtualizedTableHandyFilter extends Component {
     }, _filterRows);
   }
 
-  _onResetFilter(filters, andOr) {
-    console.log(filters, andOr);
-
+  _onResetFilter(filters) {
     const {
       // other functions
       _filterRows,
@@ -251,20 +235,6 @@ class VirtualizedTableHandyFilter extends Component {
         filters: resetFilters,
       };
     }, _filterRows);
-  }
-
-  _onChangeFilterType(filterType) {
-    this.setState(prevState => {
-      const { filterColKey } = prevState;
-
-      return {
-        ...prevState,
-        filterTypes: {
-          ...prevState.filterTypes,
-          [filterColKey]: filterType,
-        },
-      };
-    });
   }
 
   // --- render functions --- //
@@ -392,10 +362,6 @@ class VirtualizedTableHandyFilter extends Component {
       filterColKey: null,
       filterX: 0,
       filterY: 0,
-      filterTypes: cols.reduce((acc, col) => {
-        acc[col.key] = 'and';
-        return acc;
-      }, {}),
       filters: [],
       filteredRows: rows,
     };
@@ -409,7 +375,6 @@ class VirtualizedTableHandyFilter extends Component {
     this._onAddFilter = this._onAddFilter.bind(this);
     this._onRemoveFilter = this._onRemoveFilter.bind(this);
     this._onResetFilter = this._onResetFilter.bind(this);
-    this._onChangeFilterType = this._onChangeFilterType.bind(this);
 
     // render functions
     this._renderItem = this._renderItem.bind(this);
@@ -421,15 +386,7 @@ class VirtualizedTableHandyFilter extends Component {
 
   render() {
     const {
-      state: {
-        cols,
-        filterColKey,
-        filterX,
-        filterY,
-        filters,
-        filterTypes,
-        filteredRows,
-      },
+      state: { cols, filterColKey, filterX, filterY, filters, filteredRows },
 
       // refs
       _table,
@@ -439,7 +396,6 @@ class VirtualizedTableHandyFilter extends Component {
       _onAddFilter,
       _onRemoveFilter,
       _onResetFilter,
-      _onChangeFilterType,
 
       // render functions
       _renderItem,
@@ -476,14 +432,11 @@ class VirtualizedTableHandyFilter extends Component {
           x={filterX}
           y={filterY}
           filters={currentFilters}
-          filterType={filterTypes[filterColKey]}
-          showTypeAlways={true}
           renderItem={_renderFilterItem}
           onClose={_onCloseFilter}
           onClickAdd={_onAddFilter}
           onClickRemove={_onRemoveFilter}
           onClickReset={_onResetFilter}
-          onChangeType={_onChangeFilterType}
         />
         <textarea style={{ width: 0, flexGrow: 1 }} disabled value={CODE} />
       </div>
@@ -510,8 +463,8 @@ class VirtualizedTableHandyFilter extends Component {
     });
   }
 
-  _onAddFilter(filterValue, andOr) {
-    console.log(andOr);
+  _onAddFilter(filterValue) {
+    console.log(filterValue);
 
     const {
       state: { filters, filterColKey },
@@ -539,8 +492,8 @@ class VirtualizedTableHandyFilter extends Component {
       }, _filterRows);
   }
 
-  _onRemoveFilter(filter, andOr) {
-    console.log(andOr);
+  _onRemoveFilter(filter) {
+    console.log(filter);
 
     const {
       // other functions
@@ -561,8 +514,8 @@ class VirtualizedTableHandyFilter extends Component {
     }, _filterRows);
   }
 
-  _onResetFilter(filters, andOr) {
-    console.log(filters, andOr);
+  _onResetFilter(filters) {
+    console.log(filters);
 
     const {
       // other functions
@@ -579,20 +532,6 @@ class VirtualizedTableHandyFilter extends Component {
         filters: resetFilters,
       };
     }, _filterRows);
-  }
-
-  _onChangeFilterType(filterType) {
-    this.setState(prevState => {
-      const { filterColKey } = prevState;
-
-      return {
-        ...prevState,
-        filterTypes: {
-          ...prevState.filterTypes,
-          [filterColKey]: filterType,
-        },
-      };
-    });
   }
 
   // --- render functions --- //

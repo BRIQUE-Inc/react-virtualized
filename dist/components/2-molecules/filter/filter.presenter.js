@@ -169,8 +169,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Filter).call(this, props));
     _this.state = {
-      filterValue: '',
-      andOr: 'and'
+      filterValue: ''
     }; // elements
 
     _this._el = document.createElement('div'); // event handlers
@@ -180,7 +179,7 @@ function (_Component) {
     _this._onClickAddButton = _this._onClickAddButton.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this._onClickRemoveButton = _this._onClickRemoveButton.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this._onClickResetButton = _this._onClickResetButton.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this._onChangeAndOr = _this._onChangeAndOr.bind(_assertThisInitialized(_assertThisInitialized(_this))); // render functions
+    _this._onChangeFilterType = _this._onChangeFilterType.bind(_assertThisInitialized(_assertThisInitialized(_this))); // render functions
 
     _this._renderFilterListItem = _this._renderFilterListItem.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
@@ -196,15 +195,14 @@ function (_Component) {
           width = _this$props.width,
           maxHeight = _this$props.maxHeight,
           filters = _this$props.filters,
+          filterType = _this$props.filterType,
           showTypeAlways = _this$props.showTypeAlways,
-          _this$state = this.state,
-          filterValue = _this$state.filterValue,
-          andOr = _this$state.andOr,
+          filterValue = this.state.filterValue,
           _el = this._el,
           _onChangeFilterValue = this._onChangeFilterValue,
           _onClickAddButton = this._onClickAddButton,
           _onClickResetButton = this._onClickResetButton,
-          _onChangeAndOr = this._onChangeAndOr,
+          _onChangeFilterType = this._onChangeFilterType,
           _renderFilterListItem = this._renderFilterListItem;
       return _reactDom.default.createPortal(_react.default.createElement(Container, {
         open: open,
@@ -225,15 +223,15 @@ function (_Component) {
       }, filters.map(_renderFilterListItem)), _react.default.createElement(ButtonArea, null, (showTypeAlways || filters.length > 1) && _react.default.createElement(RadioButtons, null, _react.default.createElement("label", null, _react.default.createElement("span", null, "AND"), _react.default.createElement("input", {
         type: "radio",
         value: "and",
-        name: "and-or",
-        checked: andOr === 'and',
-        onChange: _onChangeAndOr
+        name: "filter-type",
+        checked: filterType === 'and',
+        onChange: _onChangeFilterType
       })), _react.default.createElement("label", null, _react.default.createElement("span", null, "OR"), _react.default.createElement("input", {
         type: "radio",
         value: "or",
-        name: "and-or",
-        checked: andOr === 'or',
-        onChange: _onChangeAndOr
+        name: "filter-type",
+        checked: filterType === 'or',
+        onChange: _onChangeFilterType
       }))), _react.default.createElement(_button.default, {
         onClick: _onClickResetButton,
         width: "64px",
@@ -299,9 +297,9 @@ function (_Component) {
       _stopPropagation(event);
 
       var onClickAdd = this.props.onClickAdd,
-          _this$state2 = this.state,
-          filterValue = _this$state2.filterValue,
-          andOr = _this$state2.andOr;
+          _this$state = this.state,
+          filterValue = _this$state.filterValue,
+          andOr = _this$state.andOr;
       onClickAdd(filterValue, andOr);
       this.setState({
         filterValue: ''
@@ -328,14 +326,11 @@ function (_Component) {
       onClickReset(filters, andOr);
     }
   }, {
-    key: "_onChangeAndOr",
-    value: function _onChangeAndOr(_ref3) {
+    key: "_onChangeFilterType",
+    value: function _onChangeFilterType(_ref3) {
       var value = _ref3.target.value;
       var onChangeType = this.props.onChangeType;
       onChangeType(value);
-      this.setState({
-        andOr: value
-      });
     } // --- render functions --- //
 
   }, {
@@ -367,12 +362,14 @@ _defineProperty(Filter, "propTypes", {
   width: _propTypes.default.string,
   maxHeight: _propTypes.default.string,
   filters: _propTypes.default.array,
+  filterType: _propTypes.default.oneOf(['and', 'or']),
   showTypeAlways: _propTypes.default.bool,
   renderItem: _propTypes.default.func,
   onClose: _propTypes.default.func,
   onClickAdd: _propTypes.default.func,
   onClickRemove: _propTypes.default.func,
-  onClickReset: _propTypes.default.func
+  onClickReset: _propTypes.default.func,
+  onChangeType: _propTypes.default.func
 });
 
 _defineProperty(Filter, "defaultProps", {
@@ -383,6 +380,7 @@ _defineProperty(Filter, "defaultProps", {
   width: '240px',
   maxHeight: '300px',
   filters: [],
+  filterType: 'and',
   showTypeAlways: false,
   renderItem: function renderItem(filter, idx) {
     return "".concat(filter);

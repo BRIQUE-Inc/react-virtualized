@@ -127,12 +127,14 @@ class Filter extends Component {
     width: PropTypes.string,
     maxHeight: PropTypes.string,
     filters: PropTypes.array,
+    filterType: PropTypes.oneOf(['and', 'or']),
     showTypeAlways: PropTypes.bool,
     renderItem: PropTypes.func,
     onClose: PropTypes.func,
     onClickAdd: PropTypes.func,
     onClickRemove: PropTypes.func,
     onClickReset: PropTypes.func,
+    onChangeType: PropTypes.func,
   };
 
   static defaultProps = {
@@ -143,6 +145,7 @@ class Filter extends Component {
     width: '240px',
     maxHeight: '300px',
     filters: [],
+    filterType: 'and',
     showTypeAlways: false,
     renderItem: (filter, idx) => `${filter}`,
     onClose: event => {},
@@ -159,7 +162,6 @@ class Filter extends Component {
 
     this.state = {
       filterValue: '',
-      andOr: 'and',
     };
 
     // elements
@@ -171,7 +173,7 @@ class Filter extends Component {
     this._onClickAddButton = this._onClickAddButton.bind(this);
     this._onClickRemoveButton = this._onClickRemoveButton.bind(this);
     this._onClickResetButton = this._onClickResetButton.bind(this);
-    this._onChangeAndOr = this._onChangeAndOr.bind(this);
+    this._onChangeFilterType = this._onChangeFilterType.bind(this);
 
     // render functions
     this._renderFilterListItem = this._renderFilterListItem.bind(this);
@@ -179,9 +181,18 @@ class Filter extends Component {
 
   render() {
     const {
-      props: { open, x, y, width, maxHeight, filters, showTypeAlways },
+      props: {
+        open,
+        x,
+        y,
+        width,
+        maxHeight,
+        filters,
+        filterType,
+        showTypeAlways,
+      },
 
-      state: { filterValue, andOr },
+      state: { filterValue },
 
       // elements
       _el,
@@ -190,7 +201,7 @@ class Filter extends Component {
       _onChangeFilterValue,
       _onClickAddButton,
       _onClickResetButton,
-      _onChangeAndOr,
+      _onChangeFilterType,
 
       // render functions
       _renderFilterListItem,
@@ -226,9 +237,9 @@ class Filter extends Component {
                 <input
                   type="radio"
                   value="and"
-                  name="and-or"
-                  checked={andOr === 'and'}
-                  onChange={_onChangeAndOr}
+                  name="filter-type"
+                  checked={filterType === 'and'}
+                  onChange={_onChangeFilterType}
                 />
               </label>
               <label>
@@ -236,9 +247,9 @@ class Filter extends Component {
                 <input
                   type="radio"
                   value="or"
-                  name="and-or"
-                  checked={andOr === 'or'}
-                  onChange={_onChangeAndOr}
+                  name="filter-type"
+                  checked={filterType === 'or'}
+                  onChange={_onChangeFilterType}
                 />
               </label>
             </RadioButtons>
@@ -358,13 +369,12 @@ class Filter extends Component {
     onClickReset(filters, andOr);
   }
 
-  _onChangeAndOr({ target: { value } }) {
+  _onChangeFilterType({ target: { value } }) {
     const {
       props: { onChangeType },
     } = this;
 
     onChangeType(value);
-    this.setState({ andOr: value });
   }
 
   // --- render functions --- //
